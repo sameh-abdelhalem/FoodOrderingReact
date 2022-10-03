@@ -27,8 +27,9 @@ const DUMMY_MEALS = [
     price: 18.99,
   },
 ];
-const AvailableMeals = () => {
-  const mealsList = DUMMY_MEALS.map((meal) => (
+
+const AvailableMeals = (props) => {
+  const mealsList = props.mealsData.map((meal) => (
     <MealItem
       key={meal.id}
       id={meal.id}
