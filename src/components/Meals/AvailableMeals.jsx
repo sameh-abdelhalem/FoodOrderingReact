@@ -1,32 +1,32 @@
 import Card from "../UI/Card";
 import classes from "./AvailableMeals.module.css";
 import MealItem from "./MealItem/MealItem";
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "Schnitzel",
-    description: "A german specialty!",
-    price: 16.5,
-  },
-  {
-    id: "m3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "m4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
+// const DUMMY_MEALS = [
+//   {
+//     id: "m1",
+//     name: "Sushi",
+//     description: "Finest fish and veggies",
+//     price: 22.99,
+//   },
+//   {
+//     id: "m2",
+//     name: "Schnitzel",
+//     description: "A german specialty!",
+//     price: 16.5,
+//   },
+//   {
+//     id: "m3",
+//     name: "Barbecue Burger",
+//     description: "American, raw, meaty",
+//     price: 12.99,
+//   },
+//   {
+//     id: "m4",
+//     name: "Green Bowl",
+//     description: "Healthy...and green...",
+//     price: 18.99,
+//   },
+// ];
 
 const AvailableMeals = (props) => {
   const mealsList = props.mealsData.map((meal) => (
@@ -41,7 +41,14 @@ const AvailableMeals = (props) => {
   return (
     <section className={classes.meals}>
       <Card>
-        <ul>{mealsList}</ul>
+        {!props.isLoading && props.mealsData.length === 0 && !props.err && (
+          <p>found no movies</p>
+        )}
+        {props.isLoading ? (
+          <p>Meals are Loading!</p>
+        ) : (
+          <ul>{props.err || mealsList}</ul>
+        )}
       </Card>
     </section>
   );

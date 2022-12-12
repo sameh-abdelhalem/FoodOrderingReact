@@ -5,7 +5,11 @@ const Meals = (props) => {
   return (
     <>
       <MealsSummary />
-      <AvailableMeals mealsData={props.mealsData} />
+      <AvailableMeals
+        mealsData={props.mealsData}
+        err={props.err}
+        isLoading={props.isLoading}
+      />
     </>
   );
 };

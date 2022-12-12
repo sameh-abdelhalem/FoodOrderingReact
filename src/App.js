@@ -7,19 +7,30 @@ import CartProvider from "./store/CartProvider";
 
 function App() {
   const [mealsData, setMealsData] = useState([]);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    fetch(
-      "https://meal-ordering-app-99474-default-rtdb.firebaseio.com/Meals.json"
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const transformedMeals = [];
+    const fetchMeals = async () => {
+      const response = await fetch(
+        "https://meal-ordering-app-99474-default-rtdb.firebaseio.com/Meals"
+      );
+      if (!response.ok) {
+        throw new Error("something went wrong!!");
+      }
 
-        for (const key in data) {
-          transformedMeals.push({ id: key, ...data[key] });
-          setMealsData(transformedMeals);
-        }
-      });
+      const responseData = await response.json();
+      const transformedMeals = [];
+
+      for (const key in responseData) {
+        transformedMeals.push({ id: key, ...responseData[key] });
+        setMealsData(transformedMeals);
+        setIsLoading(false);
+      }
+    };
+
+    fetchMeals().catch((err) => {
+      setIsLoading(false), setErrorMsg(err.message);
+    });
   }, []);
   const [cartIsShown, setCartIsShown] = useState(false);
   const showCartHandler = () => {
@@ -30,11 +41,10 @@ function App() {
   };
   return (
     <CartProvider>
-      <OrderForm></OrderForm>
       {cartIsShown && <Cart onHideCart={hideCartHandler} />}
       <Header showCart={showCartHandler} />
       <main>
-        <Meals mealsData={mealsData} />
+        <Meals mealsData={mealsData} err={errorMsg} isLoading={isLoading} />
       </main>
     </CartProvider>
   );
