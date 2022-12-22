@@ -1,13 +1,16 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import CartContext from "../../store/cart-context";
 import Modal from "../UI/Modal";
 import classes from "./Cart.module.css";
 import CartItem from "./CartItem";
+import Checkout from "./Checkout";
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
   const hasItems = cartCtx.items.length > 0;
+
+  const [foodOrdered, setFoodOrdered] = useState(false);
   const cartItemRemoveHandler = (id) => {
     cartCtx.removeItem(id);
   };
@@ -28,6 +31,9 @@ const Cart = (props) => {
       ))}
     </ul>
   );
+  const orderFoodHandler = () => {
+    setFoodOrdered(true);
+  };
 
   return (
     <Modal onHideCart={props.onHideCart}>
@@ -36,12 +42,19 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      <div className={classes.actions}>
-        <button className={classes["button--alt"]} onClick={props.onHideCart}>
-          Close
-        </button>
-        {hasItems && <button className={classes.button}>Order</button>}
-      </div>
+      {foodOrdered && <Checkout setFoodOrdered={setFoodOrdered} />}
+      {!foodOrdered && (
+        <div className={classes.actions}>
+          <button className={classes["button--alt"]} onClick={props.onHideCart}>
+            Close
+          </button>
+          {hasItems && (
+            <button className={classes.button} onClick={orderFoodHandler}>
+              Order
+            </button>
+          )}
+        </div>
+      )}
     </Modal>
   );
 };
