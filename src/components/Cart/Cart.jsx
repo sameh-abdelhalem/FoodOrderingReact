@@ -18,9 +18,12 @@ const Cart = (props) => {
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
-  const confirmOrderHandler = (userData) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
+  const confirmOrderHandler = async (userData) => {
+    setIsSubmitting(true);
     console.log(userData);
-    fetch(
+    await fetch(
       "https://meal-ordering-app-99474-default-rtdb.firebaseio.com/user-data.json",
       {
         method: "POST",
@@ -30,6 +33,8 @@ const Cart = (props) => {
         }),
       }
     );
+    setIsSubmitting(false);
+    setDidSubmit(true);
   };
   const cartItems = (
     <ul className={classes["cart-items"]}>
@@ -48,9 +53,8 @@ const Cart = (props) => {
   const orderFoodHandler = () => {
     setFoodOrdered(true);
   };
-
-  return (
-    <Modal onHideCart={props.onHideCart}>
+  const modalCartData = (
+    <>
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
@@ -74,6 +78,14 @@ const Cart = (props) => {
           )}
         </div>
       )}
+    </>
+  );
+
+  return (
+    <Modal onHideCart={props.onHideCart}>
+      {!isSubmitting && !didSubmit && modalCartData}
+      {isSubmitting && <p>Your Order is being Sent...</p>}
+      {didSubmit && <p>we received your order and it will be delivered soon</p>}
     </Modal>
   );
 };
