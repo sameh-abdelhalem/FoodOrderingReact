@@ -35,6 +35,7 @@ const Cart = (props) => {
     );
     setIsSubmitting(false);
     setDidSubmit(true);
+    cartCtx.clearCart();
   };
   const cartItems = (
     <ul className={classes["cart-items"]}>
@@ -85,7 +86,12 @@ const Cart = (props) => {
     <Modal onHideCart={props.onHideCart}>
       {!isSubmitting && !didSubmit && modalCartData}
       {isSubmitting && <p>Your Order is being Sent...</p>}
-      {didSubmit && <p>we received your order and it will be delivered soon</p>}
+      {didSubmit && (
+        <div>
+          <p>we received your order and it will be delivered soon</p>
+          <button onClick={props.onHideCart}>Close</button>
+        </div>
+      )}
     </Modal>
   );
 };
