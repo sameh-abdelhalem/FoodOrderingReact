@@ -14,8 +14,22 @@ const Cart = (props) => {
   const cartItemRemoveHandler = (id) => {
     cartCtx.removeItem(id);
   };
+
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
+  };
+  const confirmOrderHandler = (userData) => {
+    console.log(userData);
+    fetch(
+      "https://meal-ordering-app-99474-default-rtdb.firebaseio.com/user-data.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          user: userData,
+          orderedItems: cartCtx.items,
+        }),
+      }
+    );
   };
   const cartItems = (
     <ul className={classes["cart-items"]}>
@@ -42,7 +56,12 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {foodOrdered && <Checkout setFoodOrdered={setFoodOrdered} />}
+      {foodOrdered && (
+        <Checkout
+          onConfirm={confirmOrderHandler}
+          setFoodOrdered={setFoodOrdered}
+        />
+      )}
       {!foodOrdered && (
         <div className={classes.actions}>
           <button className={classes["button--alt"]} onClick={props.onHideCart}>

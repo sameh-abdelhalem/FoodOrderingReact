@@ -50,11 +50,12 @@ const Checkout = (props) => {
     if (!formIsValid) {
       return;
     } else
-      console.log(
-        `your values are ${
-          (enteredName, enteredCity, enteredPostalCode, enteredStreet)
-        }`
-      );
+      props.onConfirm({
+        user: enteredName,
+        street: enteredStreet,
+        post: enteredPostalCode,
+        city: enteredCity,
+      });
   };
   return (
     <form className={classes.form} onSubmit={confirmHandler}>
